@@ -71,7 +71,7 @@ padding-right: 0;
                         <div class="card align-items-center" style="width: 18rem;">
                             <img src="/media/{{i.image}}" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">{{i.product_name}}</h5>
+                                <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
                                 <p class="card-text">{{i.desc|slice:"0:55"}}...</p>
 
                                 <span id="divpr{{i.id}}" class="divpr">
@@ -155,8 +155,23 @@ padding-right: 0;
     // Add Popover to cart
     $('#popcart').popover();
 
-    document.getElementById("popcart").setAttribute("data-content", "<h5>Items in your cart</h5>");
+    //document.getElementById("popcart").setAttribute("data-content", "<h5>Items in your cart</h5>");
 
+    updatePopover(cart);
+    function updatePopover(cart){
+        console.log("we are inside updatePopover");
+        var popString = "";
+        popString = popString + "<h5 class='text-center'>Items in your cart</h5><div class='row'><div class='col'>";
+        var i = 1;
+        for (var item in cart){
+            popString = popString + "<strong>" + i + "</strong>. ";
+            popString = popString + document.getElementById('name' + item).innerHTML.slice(0, 19) + ".... Qty: " + cart[item] + "<br>";
+            i = i+1;
+        }
+        popString = popString + "</div></div>";
+        document.getElementById("popcart").setAttribute("data-content", popString);
+        $('#popcart').popover('show');
+    };
 
     // Display plus minus buttons for updating the cart when Add To Cart button is clicked
     function updateCart(cart) {
@@ -169,6 +184,7 @@ padding-right: 0;
         localStorage.setItem('cart', JSON.stringify(cart));
         document.getElementById('cart').innerHTML = Object.keys(cart).length;
         console.log(cart);
+        updatePopover(cart);
     };
 
 
