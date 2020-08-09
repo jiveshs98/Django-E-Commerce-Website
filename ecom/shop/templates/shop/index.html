@@ -126,14 +126,17 @@ padding-right: 0;
 
     else {
         cart = JSON.parse(localStorage.getItem('cart'));
-        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+
         updateCart(cart);
     }
 
     // If Add To Cart button is clicked, then add/increment the item
 
-    $('.cart').click(function () {
+    //$('.cart').click(function () {
 
+    // When dynamically generated again using clearCart(), the add to cart button's jquery will be removed. So, we will bind the jquery to a static element parent to it for Add To Cart button to work properly after being dynamically created. In this case, <span> tag.
+
+    $('.divpr').on('click','button.cart', function(){    
         var idstr = this.id.toString();
 
         if (cart[idstr] != undefined) {
@@ -146,35 +149,53 @@ padding-right: 0;
 
         updateCart(cart);
 
-        // Save Cart in localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-        document.getElementById('cart').innerHTML = Object.keys(cart).length;
     });
 
 
-    // Add Popover to cart
+    // Add Popover to cart button
     $('#popcart').popover();
 
     //document.getElementById("popcart").setAttribute("data-content", "<h5>Items in your cart</h5>");
 
     // Update cart popover
     updatePopover(cart);
-    function updatePopover(cart){
+
+    // Function to update cart popover
+    function updatePopover(cart) {
         console.log("we are inside updatePopover");
         var popString = "";
         popString = popString + "<h5 class='text-center'>Items in your cart</h5><div class='row'><div class='col'>";
         var i = 1;
-        for (var item in cart){
+        for (var item in cart) {
             popString = popString + "<strong>" + i + "</strong>. ";
             popString = popString + document.getElementById('name' + item).innerHTML.slice(0, 19) + ".... Qty: " + cart[item] + "<br>";
-            i = i+1;
+            i = i + 1;
         }
-        popString = popString + "</div></div>";
+        popString = popString + "</div></div> <div class='row my-4'><div class='col'><a href='/shop/checkout'><button class='btn btn-primary mr-1' id='checkout'>Checkout</button></a><button class='btn btn-primary ml-1' onclick='clearCart()' id='clearCart'>Clear Cart</button></div></div>";
         document.getElementById("popcart").setAttribute("data-content", popString);
-        $('#popcart').popover('show');
+        $('#popcart').popover('show');   
+        
+        // After Bootstrap version 4.2.1 the popover does not recognize some html elements like button, input etc becoz of sanitization.
+        // So, we need to add new elements to the popover's whiteList.
+        // Refer: https://getbootstrap.com/docs/4.3/getting-started/javascript/#sanitizer
+
+        var myDefaultWhiteList = $.fn.tooltip.Constructor.Default.whiteList;
+        myDefaultWhiteList.button = ['onclick'];
+        
     };
 
-    // Display plus minus buttons for updating the cart when Add To Cart button is clicked
+    // Function to clear the cart items
+    function clearCart() {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        for (var item in cart) {
+            document.getElementById("div" + item).innerHTML = "<button id='" + item + "' class='btn btn-primary cart'>Add To Cart</button>"
+        };
+        localStorage.clear();
+        cart = {};
+        updateCart(cart);
+    }
+
+    // Function to display plus minus buttons for updating the cart when Add To Cart button is clicked
     function updateCart(cart) {
         var sum = 0;
 
@@ -185,10 +206,10 @@ padding-right: 0;
 
         // Save Cart in localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
-        
+
         // Display total cart items
         document.getElementById('cart').innerHTML = sum;
-        
+
         console.log(cart);
         updatePopover(cart);
     };
