@@ -157,6 +157,7 @@ padding-right: 0;
 
     //document.getElementById("popcart").setAttribute("data-content", "<h5>Items in your cart</h5>");
 
+    // Update cart popover
     updatePopover(cart);
     function updatePopover(cart){
         console.log("we are inside updatePopover");
@@ -175,14 +176,19 @@ padding-right: 0;
 
     // Display plus minus buttons for updating the cart when Add To Cart button is clicked
     function updateCart(cart) {
+        var sum = 0;
 
         for (var item in cart) {
+            sum = sum + cart[item];
             document.getElementById("div" + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "'>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'>+</button>";
         }
 
         // Save Cart in localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
-        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+        
+        // Display total cart items
+        document.getElementById('cart').innerHTML = sum;
+        
         console.log(cart);
         updatePopover(cart);
     };
