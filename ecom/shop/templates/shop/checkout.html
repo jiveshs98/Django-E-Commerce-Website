@@ -11,20 +11,9 @@
 
             <h2 class="my-4">Step 1 - My Awesome Cart Express Checkout - Review Your Cart Items</h2>
 
-            <div id="items">
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Cras justo odio
-                        <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Morbi leo risus
-                        <span class="badge badge-primary badge-pill">1</span>
-                    </li>
+            <div class="my-4">
+                <ul class="list-group" id="items">
+
                 </ul>
             </div>
         </div>
@@ -36,48 +25,101 @@
 
             <form>
                 <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputname">Name</label>
-                    <input type="text" class="form-control" id="inputname" placeholder="Name">
-                  </div>  
-                  
-                  <div class="form-group col-md-6">
-                    <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-                  </div>
-                  
+                    <div class="form-group col-md-6">
+                        <label for="inputname">Name</label>
+                        <input type="text" class="form-control" id="inputname" placeholder="Name">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Email</label>
+                        <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    </div>
+
                 </div>
                 <div class="form-group">
-                  <label for="inputAddress">Address Line 1</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="inputAddress">Address Line 1</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
                 </div>
                 <div class="form-group">
-                  <label for="inputAddress2">Address Line 2</label>
-                  <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                    <label for="inputAddress2">Address Line 2</label>
+                    <input type="text" class="form-control" id="inputAddress2"
+                        placeholder="Apartment, studio, or floor">
                 </div>
                 <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="inputCity">City</label>
-                    <input type="text" class="form-control" id="inputCity">
-                  </div>
-                  <div class="form-group col-md-4">
-                    <label for="inputState">State</label>
-                    <input type="text" class="form-control" id="inputState" placeholder="Enter your state">
-                  </div>
-                  <div class="form-group col-md-2">
-                    <label for="inputZip">Zip</label>
-                    <input type="text" class="form-control" id="inputZip">
-                  </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">City</label>
+                        <input type="text" class="form-control" id="inputCity">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputState">State</label>
+                        <input type="text" class="form-control" id="inputState" placeholder="Enter your state">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputZip">Zip</label>
+                        <input type="text" class="form-control" id="inputZip">
+                    </div>
                 </div>
                 <div class="form-group">
-                  <label for="inputPhone">Contact No.</label>
-                  <input type="tel" pattern="[0-9]{10}" class="form-control" id="inputPhone" placeholder="Enter your 10-digit mobile number">
+                    <label for="inputPhone">Contact No.</label>
+                    <input type="tel" pattern="[0-9]{10}" class="form-control" id="inputPhone"
+                        placeholder="Enter your 10-digit mobile number">
                 </div>
                 <button type="submit" class="btn btn-primary">Place Order</button>
-              </form>
+            </form>
         </div>
     </div>
 
 </div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    // Find out the cart items from localStorage
+
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    console.log(cart);
+
+    var sum = 0;
+
+    if ($.isEmptyObject(cart)) {
+        // If cart is empty
+
+        // Using ES6 feature of print formatting
+
+        mystr = `<li class='list-group-item text-center'>Your cart is empty. Please add some items in your cart before you checkout!</li>`
+
+        $('#items').append(mystr);
+    }
+
+    else {
+
+        for (item in cart) {
+            let name = cart[item][1];
+            let quantity = cart[item][0];
+            sum = sum + quantity;
+
+            // Using ES6 feature of print formatting
+
+            mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${name}
+                        <span class="badge badge-primary badge-pill">${quantity}</span>
+                    </li>`
+
+            $('#items').append(mystr);
+        }
+    }
+
+    // Display total cart items on Cart Button
+    document.getElementById('cart').innerHTML = sum;
+</script>
 
 {% endblock %}
