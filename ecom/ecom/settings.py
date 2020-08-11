@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-# SuperUSer: jivesh jiveshs98@gmail.com chintus98
+# SuperUSer: jivesh jiveshs98@gmail.com jivesh@123
 
 import os
 
