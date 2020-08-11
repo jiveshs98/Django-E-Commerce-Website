@@ -118,6 +118,14 @@ padding-right: 0;
 
 <script>
 
+    // After Bootstrap version 4.2.1 the popover does not recognize some html elements like button, input etc becoz of sanitization.
+    // So, we need to add new elements to the popover's whiteList.
+    // Refer: https://getbootstrap.com/docs/4.3/getting-started/javascript/#sanitizer
+
+    var myDefaultWhiteList = $.fn.tooltip.Constructor.Default.whiteList;
+    myDefaultWhiteList.button = ['onclick'];
+
+
     // Find out the cart items from localStorage
 
     if (localStorage.getItem('cart') == null) {
@@ -136,15 +144,21 @@ padding-right: 0;
 
     // When dynamically generated again using clearCart(), the add to cart button's jquery will be removed. So, we will bind the jquery to a static element parent to it for Add To Cart button to work properly after being dynamically created. In this case, <span> tag.
 
-    $('.divpr').on('click','button.cart', function(){    
+    $('.divpr').on('click', 'button.cart', function () {
         var idstr = this.id.toString();
 
+        
         if (cart[idstr] != undefined) {
-            cart[idstr] = cart[idstr] + 1;
+            // If cart item is already present
+            quantity = cart[idstr][0] + 1;
         }
 
+        
         else {
-            cart[idstr] = 1;
+            // If cart item is not present
+            quantity = 1;
+            name = document.getElementById('name' + idstr).innerHTML;
+            cart[idstr] = [quantity, name];
         }
 
         updateCart(cart);
@@ -168,20 +182,15 @@ padding-right: 0;
         var i = 1;
         for (var item in cart) {
             popString = popString + "<strong>" + i + "</strong>. ";
-            popString = popString + document.getElementById('name' + item).innerHTML.slice(0, 19) + ".... Qty: " + cart[item] + "<br>";
+            popString = popString + document.getElementById('name' + item).innerHTML.slice(0, 19) + ".... Qty: " + cart[item][0] + "<br>";
             i = i + 1;
         }
         popString = popString + "</div></div> <div class='row my-4'><div class='col'><a href='/shop/checkout'><button class='btn btn-primary mr-1' id='checkout'>Checkout</button></a><button class='btn btn-primary ml-1' onclick='clearCart()' id='clearCart'>Clear Cart</button></div></div>";
         document.getElementById("popcart").setAttribute("data-content", popString);
-        $('#popcart').popover('show');   
-        
-        // After Bootstrap version 4.2.1 the popover does not recognize some html elements like button, input etc becoz of sanitization.
-        // So, we need to add new elements to the popover's whiteList.
-        // Refer: https://getbootstrap.com/docs/4.3/getting-started/javascript/#sanitizer
+        $('#popcart').popover('show');
 
-        var myDefaultWhiteList = $.fn.tooltip.Constructor.Default.whiteList;
-        myDefaultWhiteList.button = ['onclick'];
-        
+
+
     };
 
     // Function to clear the cart items
@@ -200,14 +209,14 @@ padding-right: 0;
         var sum = 0;
 
         for (var item in cart) {
-            sum = sum + cart[item];
-            document.getElementById("div" + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "'>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'>+</button>";
+            sum = sum + cart[item][0];
+            document.getElementById("div" + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "'>" + cart[item][0] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'>+</button>";
         }
 
         // Save Cart in localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
 
-        // Display total cart items
+        // Display total cart items on Cart Button
         document.getElementById('cart').innerHTML = sum;
 
         console.log(cart);
@@ -219,17 +228,17 @@ padding-right: 0;
     $('.divpr').on("click", "button.minus", function () {
 
         a = this.id.slice(7,); // To extract pr6 from minuspr6 (For Example)
-        cart['pr' + a] = cart['pr' + a] - 1;
-        cart['pr' + a] = Math.max(0, cart['pr' + a]);   // To remove negative values
-        document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+        cart['pr' + a][0] = cart['pr' + a][0] - 1;
+        cart['pr' + a][0] = Math.max(0, cart['pr' + a][0]);   // To remove negative values
+        document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
         updateCart(cart);
     });
 
     $('.divpr').on("click", "button.plus", function () {
 
         a = this.id.slice(6,); // To extract pr6 from pluspr6 (For Example)
-        cart['pr' + a] = cart['pr' + a] + 1;
-        document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+        cart['pr' + a][0] = cart['pr' + a][0] + 1;
+        document.getElementById('valpr' + a).innerHTML = cart['pr' + a][0];
         updateCart(cart);
     });
 </script>
