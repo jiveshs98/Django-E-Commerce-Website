@@ -23,45 +23,47 @@
         <div class="col">
             <h2 class="my-4">Step 2 - Enter Address And Other Details:</h2>
 
-            <form>
+            <form method='POST' action='/shop/checkout/'>
+                {% csrf_token %}
+                <input type="hidden" name="itemsJson" id="itemsJson">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputname">Name</label>
-                        <input type="text" class="form-control" id="inputname" placeholder="Name">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name">
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="inputEmail4">Email</label>
-                        <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                     </div>
 
                 </div>
                 <div class="form-group">
-                    <label for="inputAddress">Address Line 1</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                    <label for="address1">Address Line 1</label>
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
                 </div>
                 <div class="form-group">
-                    <label for="inputAddress2">Address Line 2</label>
-                    <input type="text" class="form-control" id="inputAddress2"
+                    <label for="address2">Address Line 2</label>
+                    <input type="text" class="form-control" id="address2" name="address2"
                         placeholder="Apartment, studio, or floor">
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputCity">City</label>
-                        <input type="text" class="form-control" id="inputCity">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="inputState">State</label>
-                        <input type="text" class="form-control" id="inputState" placeholder="Enter your state">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" id="state" name="state" placeholder="Enter your state">
                     </div>
                     <div class="form-group col-md-2">
-                        <label for="inputZip">Zip</label>
-                        <input type="text" class="form-control" id="inputZip">
+                        <label for="zip_code">Zip</label>
+                        <input type="text" class="form-control" id="zip_code" name="zip_code">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPhone">Contact No.</label>
-                    <input type="tel" pattern="[0-9]{10}" class="form-control" id="inputPhone"
+                    <label for="phone">Contact No.</label>
+                    <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone" name="phone"
                         placeholder="Enter your 10-digit mobile number">
                 </div>
                 <button type="submit" class="btn btn-primary">Place Order</button>
@@ -120,6 +122,19 @@
 
     // Display total cart items on Cart Button
     document.getElementById('cart').innerHTML = sum;
+
+    // Sending cart JSON to input field
+    $('#itemsJson').val(JSON.stringify(cart));
+
+    {% if thank %}
+    alert('Thanks for ordering with us. Your order id is {{id}}. Use it to track your order using our order tracker');
+
+    localStorage.clear();
+
+    // Redirect after alert
+    document.location = "/shop";
+    {% endif %}
+
 </script>
 
 {% endblock %}
