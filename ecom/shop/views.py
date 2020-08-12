@@ -1,17 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Product, Contact, Orders
+from .models import Product, Contact, Orders, OrderUpdate
 
 from math import ceil
+
+import json
 
 # Create your views here.
 
 def index(request):
-    # products = Product.objects.all()
-    # print(products)
-    # n = len(products)
-    # nSlides = n//4 + ceil((n/4) - (n//4))
 
     allProds = []
     catprods = Product.objects.values('category','id')
@@ -24,9 +22,7 @@ def index(request):
         nSlides = n//4 + ceil((n/4) - (n//4))
         allProds.append([prod, range(1, nSlides), nSlides])
 
-    #params = {'num_of_slides' : nSlides, 'range' : range(1,nSlides) ,'product' : products}
-    # allProds = [[products, range(1,nSlides), nSlides],
-    #             [products, range(1,nSlides), nSlides]]
+    
     params = {'allProds': allProds}
     return render(request,'shop/index.html', params)
     #return HttpResponse('Index Shop')
@@ -53,6 +49,29 @@ def contact(request):
     # return HttpResponse("We are at contact page.")
 
 def tracker(request):
+
+    # Fetching the Order details from the form
+    if request.method == "POST":
+        order_id = request.POST.get('order_id','')
+        email = request.POST.get('email','')
+
+        try:
+            # Check whether order exists for the given id
+            order = Orders.objects.filter(order_id=order_id, email=email)
+            if len(order) > 0:
+                # If order exists, then convert updates in json and send
+                update = OrderUpdate.objects.filter(order_id=order_id)
+                updates = []
+                for item in update:
+                    updates.append({'text': item.update_desc, 'time':item.timestamp})
+                    response = json.dumps(updates)
+                    return HttpResponse(response)
+            else:
+                # If order doesn't exist
+                pass
+        
+        except Exception as e:
+            pass
     return render(request,'shop/tracker.html')
     # return HttpResponse("We are at tracker page.")
 
@@ -85,6 +104,11 @@ def checkout(request):
         order = Orders(items_json=items_json, name=name, email=email, address=address, city=city, state=state, zip_code=zip_code, phone=phone)
         order.save()
 
+        # Provide update once order is placed
+        update = OrderUpdate(order_id=order.order_id, update_desc="The order has been placed")
+        update.save()
+
+        # Provide final message for placed order
         thank = True
         oid = order.order_id
         return render(request,'shop/checkout.html',{'thank':thank, 'id':oid})

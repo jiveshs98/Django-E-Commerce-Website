@@ -1,5 +1,79 @@
 {% extends 'shop/base.html' %}
 
-{% block title %} Order Tracker - My Awesome Cart {% endblock %}
+{% block title %} My Awesome Cart Tracker {% endblock %}
 
-{% block body %} This is tracking page. {% endblock %}
+{% block body %}
+
+<div class="container">
+
+    <div class="row my-4">
+        <div class="col">
+
+            <h2 class="my-4">Enter your Order Id and Email to track your order</h2>
+
+            <form method='POST' action='#' id="trackerForm">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="order_id">Order Id</label>
+                        <input type="text" class="form-control" id="order_id" name="order_id" placeholder="Order Id">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Track Order</button>
+                </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div class="col">
+            <h2 class="my-4">Your Order Status</h2>
+            <div class="my-4">
+                <ul class="list-group" id="items">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    // Be sure to use uncompressed jquery cdn in base.html to enable ajax, otherwise page would still reload after submitting the form
+    // Using Jquery and AJAX to submit form and add items without reloading the page
+    $('#trackerForm').submit(function (event) {
+
+        $('#items').empty();
+        var formData = {
+            'orderId': $('input[name=order_id]').val(),
+            'email': $('input[name=email]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+
+        // data refers to the json received through views.py
+        .done(function (data) {
+            console.log(data);
+        });
+
+        // Prevent Form from reloading the page after submitting
+        event.preventDefault();
+    });
+
+</script>
+
+{% endblock %}
