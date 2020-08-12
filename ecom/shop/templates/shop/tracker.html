@@ -34,7 +34,9 @@
             <h2 class="my-4">Your Order Status</h2>
             <div class="my-4">
                 <ul class="list-group" id="items">
-
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="mx-auto my-0">Enter your Order Id & Email and click <em>Track Order</em> to find tracking details.</p>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -53,7 +55,7 @@
 
         $('#items').empty();
         var formData = {
-            'orderId': $('input[name=order_id]').val(),
+            'order_id': $('input[name=order_id]').val(),
             'email': $('input[name=email]').val(),
             'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
         };
@@ -68,6 +70,33 @@
         // data refers to the json received through views.py
         .done(function (data) {
             console.log(data);
+            updates = JSON.parse(data);
+            if (updates.length > 0 & updates != {}) {
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+
+                    // Using ES6 feature of print formatting
+
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${text}
+                            <span class="badge badge-primary badge-pill">${time}</span>
+                        </li>`
+
+                    $('#items').append(mystr);
+                };
+            }
+
+            else{
+                // Using ES6 feature of print formatting
+
+                mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="mx-auto my-0">Sorry, we couldn't fetch the details. Please make sure to type correct Order Id and Email.</p>
+                    </li>`
+
+                $('#items').append(mystr);
+            }
+
         });
 
         // Prevent Form from reloading the page after submitting

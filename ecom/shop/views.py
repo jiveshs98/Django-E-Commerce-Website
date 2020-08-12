@@ -52,6 +52,7 @@ def tracker(request):
 
     # Fetching the Order details from the form
     if request.method == "POST":
+        # This time the values are fetched from formData variable in tracker.html's JS
         order_id = request.POST.get('order_id','')
         email = request.POST.get('email','')
 
@@ -64,14 +65,14 @@ def tracker(request):
                 updates = []
                 for item in update:
                     updates.append({'text': item.update_desc, 'time':item.timestamp})
-                    response = json.dumps(updates)
-                    return HttpResponse(response)
+                    response = json.dumps(updates, default=str)
+                return HttpResponse(response)
             else:
                 # If order doesn't exist
-                pass
+                return HttpResponse('{}')
         
         except Exception as e:
-            pass
+            return HttpResponse('{}')
     return render(request,'shop/tracker.html')
     # return HttpResponse("We are at tracker page.")
 
