@@ -32,6 +32,7 @@ def about(request):
     #return HttpResponse("We are at about page.")
 
 def contact(request):
+    thank = False
 
     # Fetching the Contact details from the form
     if request.method == "POST":
@@ -43,9 +44,12 @@ def contact(request):
         # Adding data to the model
         contact = Contact(name=name, email=email, phone=phone, desc=desc)
         contact.save()
+
+        # Provide message for successful submission
+        thank = True
         
         
-    return render(request,'shop/contact.html')
+    return render(request,'shop/contact.html',{'thank':thank})
     # return HttpResponse("We are at contact page.")
 
 def tracker(request):
