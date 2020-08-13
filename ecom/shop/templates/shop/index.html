@@ -71,9 +71,9 @@ padding-right: 0;
                         <div class="card align-items-center" style="width: 18rem;">
                             <img src="/media/{{i.image}}" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                                <h5 class="card-title font-weight-bold" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                                <h6 class="card-title font-weight-bold">Price: Rs.<span id="pricepr{{i.id}}">{{i.price}}</span></h6>
                                 <p class="card-text">{{i.desc|slice:"0:55"}}...</p>
-
                                 <span id="divpr{{i.id}}" class="divpr">
                                     <button id="pr{{i.id}}" class="btn btn-primary cart">Add To Cart</button>
                                 </span>
@@ -158,7 +158,8 @@ padding-right: 0;
             // If cart item is not present
             quantity = 1;
             name = document.getElementById('name' + idstr).innerHTML;
-            cart[idstr] = [quantity, name];
+            price = document.getElementById('price' + idstr).innerHTML;
+            cart[idstr] = [quantity, name, parseInt(price)];
         }
 
         updateCart(cart);

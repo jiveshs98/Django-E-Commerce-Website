@@ -13,8 +13,13 @@
 
             <div class="my-4">
                 <ul class="list-group" id="items">
-
                 </ul>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mt-3">
+                        <li class="breadcrumb-item active" aria-current="page"><p class="mb-0">Your cart total is <strong>Rs. <span id="totalPrice"></span></strong>. Enter your details below & place your order. Thanks for using My Awesome Cart!</p></li>
+                    </ol>
+                </nav>
+                
             </div>
         </div>
     </div>
@@ -91,6 +96,7 @@
     console.log(cart);
 
     var sum = 0;
+    var totalPrice = 0;
 
     if ($.isEmptyObject(cart)) {
         // If cart is empty
@@ -107,7 +113,9 @@
         for (item in cart) {
             let name = cart[item][1];
             let quantity = cart[item][0];
+            let itemPrice = cart[item][2];
             sum = sum + quantity;
+            totalPrice = totalPrice + quantity * itemPrice
 
             // Using ES6 feature of print formatting
 
@@ -122,6 +130,9 @@
 
     // Display total cart items on Cart Button
     document.getElementById('cart').innerHTML = sum;
+
+    // Display total price on Cart Button
+    document.getElementById('totalPrice').innerHTML = totalPrice;
 
     // Sending cart JSON to input field
     $('#itemsJson').val(JSON.stringify(cart));
