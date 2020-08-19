@@ -14,11 +14,11 @@
           <div class="card-body d-flex flex-column align-items-start">
             <strong class="d-inline-block mb-2 text-primary">{{item.head0}}</strong>
             <h3 class="mb-0">
-              <a class="text-dark" href="#">{{item.title}}</a>
+              <a class="text-dark" href="blogpost/{{item.post_id}}">{{item.title}}</a>
             </h3>
             <div class="mb-1 text-muted">Nov 12</div>
             <p class="card-text mb-auto">{{item.head1}}</p>
-            <a href="#">Continue reading</a>
+            <a href="blogpost/{{item.post_id}}">Continue reading</a>
           </div>
           <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="/media/{{item.thumbnail}}">
         </div>
