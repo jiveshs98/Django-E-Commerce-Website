@@ -4,7 +4,9 @@ from .models import Blogpost
 # Create your views here.
 
 def index(request):
-    return render(request,'blog/index.html')
+    myposts = Blogpost.objects.all()
+    print(myposts)
+    return render(request,'blog/index.html', {'myposts':myposts})
     #return HttpResponse('Index Blog')
 
 def blogpost(request, id):
