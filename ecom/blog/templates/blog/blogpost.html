@@ -10,9 +10,11 @@
             </h1>
 
             <div class="blog-post">
-                <p class="blog-post-meta mb-5 border-bottom">January 1, 2014 by <a href="#">Mark</a></p>
+                <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+
+                <div class="fb-like" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-width="" data-layout="standard" data-action="like" data-size="large" data-share="true"></div>
                 
-                <h3 class="blog-post-title">{{post.head0}}</h3>
+                <h3 class="blog-post-title mt-5">{{post.head0}}</h3>
 
                 <p>{{post.content_head0}}</p>
                 <h3>{{post.head1}}</h3>
@@ -20,6 +22,9 @@
                 
                 <h3>{{post.head2}}</h3>
                 <p>{{post.content_head2}}</p>
+
+                <!-- Using FB Comment Plugin-->
+                <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-numposts="5" data-width=""></div>
                 
             </div><!-- /.blog-post -->
 
@@ -29,6 +34,7 @@
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">About</h4>
                 <p class="mb-0">My Awesome Cart is an <em>e-commerce website</em>. You can use it to buy and search for items online.</p>
+                <div class="fb-share-button my-3" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2Fblog%2Fblogpost%2F4&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
             </div>
 
             
