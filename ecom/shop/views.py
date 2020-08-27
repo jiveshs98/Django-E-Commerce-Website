@@ -32,6 +32,42 @@ def index(request):
     return render(request,'shop/index.html', params)
     #return HttpResponse('Index Shop')
 
+def searchMatch(query, item):
+    # function to check whether a product matches in search result
+    # Returns 'true' only if query matches the item
+
+    if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower():
+        return True
+    else:
+        return False
+
+def search(request):
+    # Getting query from user
+    query = request.GET.get('search')
+    
+    allProds = []
+    catprods = Product.objects.values('category','id')
+
+    category_dict = {item['category'] for item in catprods}
+
+    for category in category_dict:
+        prodtemp = Product.objects.filter(category=category)
+        prod= [item for item in prodtemp if searchMatch(query.lower(), item)]
+        
+        n = len(prod)
+        nSlides = n//4 + ceil((n/4) - (n//4))
+
+        if len(prod) != 0:
+            allProds.append([prod, range(1, nSlides), nSlides])
+
+    
+    params = {'allProds': allProds, 'msg':""}
+
+    if len(allProds) == 0 or len(query)<4:
+        params = {'msg': "Sorry! Your search result is empty. Please make sure to enter relevant search query"}
+    return render(request,'shop/search.html', params)
+
+
 def about(request):
     return render(request,'shop/about.html')
     #return HttpResponse("We are at about page.")
@@ -85,9 +121,6 @@ def tracker(request):
     return render(request,'shop/tracker.html')
     # return HttpResponse("We are at tracker page.")
 
-def search(request):
-    return render(request,'shop/search.html')
-    # return HttpResponse("We are at search page.")
 
 def productView(request, myid):
 
