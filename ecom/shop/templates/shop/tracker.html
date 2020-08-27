@@ -87,8 +87,10 @@
         .done(function (data) {
             console.log(data);
             data = JSON.parse(data);
-            updates = data[0];
-            if (updates.length > 0 & updates != {}) {
+            
+            if (data['status'] == 'success') {
+                updates = data['updates'];
+
                 for (i = 0; i < updates.length; i++) {
                     let text = updates[i]['text'];
                     let time = updates[i]['time'];
@@ -102,6 +104,25 @@
 
                     $('#items').append(mystr);
                 };
+
+                // Fill the Order Details
+
+                cart = JSON.parse(data['itemsJson']); // Because data['itemsJson'] is a string and we need JSON
+                console.log(cart);
+                for (item in cart) {
+                    let name = cart[item][1];
+                    let quantity = cart[item][0];
+                    
+
+                    // Using ES6 feature of print formatting
+
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${name}
+                        <span class="badge badge-primary badge-pill">${quantity}</span>
+                    </li>`
+
+                    $('#citems').append(mystr);
+                }
             }
 
             else {
@@ -114,24 +135,7 @@
                 $('#items').append(mystr);
             }
 
-            // Fill the Order Details
-
-            cart = JSON.parse(data[1]); // Because data[1] is a string and we need JSON
-            console.log(cart);
-            for (item in cart) {
-                let name = cart[item][1];
-                let quantity = cart[item][0];
-                
-
-                // Using ES6 feature of print formatting
-
-                mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${name}
-                    <span class="badge badge-primary badge-pill">${quantity}</span>
-                </li>`
-
-                $('#citems').append(mystr);
-            }
+            
         });
 
         // Prevent Form from reloading the page after submitting
